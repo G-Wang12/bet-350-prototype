@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useRef, useEffect } from 'react'
 import type { FoodCategory, Preferences, ScanInput } from '../../types'
 import { toTitleCase, normalizeIngredientName, clamp } from '../../utils/strings'
 import { estimateCategory } from '../../utils/state'
@@ -97,13 +97,22 @@ export function ScanScreen(props: {
                 <section className="panel">
                     <div className="panelTitle">1) Add a fridge photo</div>
 
-                    <input
-                        className="input"
-                        type="file"
-                        accept="image/*"
-                        capture="environment"
-                        onChange={(e) => onPickFile(e.target.files?.[0] ?? null)}
-                    />
+                            <input
+                                className="input"
+                                type="file"
+                                accept="image/*"
+                                capture="environment"
+                                onChange={(e) => onPickFile(e.target.files?.[0] ?? null)}
+                            />
+
+                            <div style={{ marginTop: 10, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                                <CameraControls
+                                    onCapture={async (dataUrl: string) => {
+                                        const thumb = await downscaleDataUrl(dataUrl, 800)
+                                        setImageDataUrl(thumb)
+                                    }}
+                                />
+                            </div>
 
                     {imageDataUrl ? (
                         <div className="photoWrap">
@@ -335,4 +344,93 @@ function loadImage(dataUrl: string): Promise<HTMLImageElement> {
         img.onerror = () => reject(new Error('Failed to load image'))
         img.src = dataUrl
     })
+}
+
+// CameraControls: small helper for in-app camera capture (mobile-friendly)
+function CameraControls({ onCapture }: { onCapture: (dataUrl: string) => void }) {
+    const videoRef = useRef<HTMLVideoElement | null>(null)
+    const streamRef = useRef<MediaStream | null>(null)
+    const [active, setActive] = useState(false)
+
+    useEffect(() => {
+        return () => {
+            if (streamRef.current) {
+                streamRef.current.getTracks().forEach((t) => t.stop())
+                streamRef.current = null
+            }
+        }
+    }, [])
+
+    async function startCamera() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
+            streamRef.current = stream
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream
+                await videoRef.current.play()
+            }
+            setActive(true)
+        } catch (err) {
+            console.warn('Camera start failed', err)
+            setActive(false)
+        }
+    }
+
+    function stopCamera() {
+        if (streamRef.current) {
+            streamRef.current.getTracks().forEach((t) => t.stop())
+            streamRef.current = null
+        }
+        if (videoRef.current) {
+            try {
+                videoRef.current.pause()
+                videoRef.current.srcObject = null
+            } catch {}
+        }
+        setActive(false)
+    }
+
+    async function capture() {
+        if (!videoRef.current) return
+        const video = videoRef.current
+        const w = video.videoWidth
+        const h = video.videoHeight
+        if (!w || !h) return
+        const canvas = document.createElement('canvas')
+        canvas.width = w
+        canvas.height = h
+        const ctx = canvas.getContext('2d')
+        if (!ctx) return
+        ctx.drawImage(video, 0, 0, w, h)
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
+        onCapture(dataUrl)
+        stopCamera()
+    }
+
+    return (
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', width: '100%' }}>
+            {!active ? (
+                <button className="button primary" onClick={startCamera} style={{ flex: '0 0 auto' }}>
+                    Use camera
+                </button>
+            ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%' }}>
+                    <video
+                        ref={videoRef}
+                        playsInline
+                        muted
+                        style={{ width: '100%', borderRadius: 10, background: '#000' }}
+                    />
+                    <div style={{ display: 'flex', gap: 8 }}>
+                        <button className="button primary" onClick={capture}>
+                            Capture
+                        </button>
+                        <button className="button" onClick={stopCamera}>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
+    )
 }
