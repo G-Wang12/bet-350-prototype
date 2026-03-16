@@ -35,8 +35,8 @@ function App() {
       <header className="appHeader">
         <div className="headerRow">
           <div className="brand">
-            <div className="brandTitle">Fridge-to-Meal Prototype</div>
-            <div className="brandSub">Scan your fridge → get 20-minute recipes</div>
+            <div className="brandTitle">Fridge-to-Meal</div>
+            <div className="brandSub">Scan ingredients • get 20-minute meals</div>
           </div>
           <div className="headerMeta">
             <div className="pill">Items: {state.inventory.items.length}</div>

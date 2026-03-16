@@ -2,12 +2,14 @@
   display: flex;
   flex-direction: column;
   min-height: 100svh;
+  accent-color: var(--accent);
 }
 
 .appHeader {
   position: sticky;
   top: 0;
-  background: var(--bg);
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
   padding: 16px 20px;
   z-index: 10;
@@ -22,9 +24,10 @@
 
 .brandTitle {
   font-family: var(--heading);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-h);
-  font-size: 18px;
+  font-size: 20px;
+  letter-spacing: -0.3px;
 }
 
 .brandSub {
@@ -55,16 +58,23 @@
   cursor: pointer;
   transition:
     box-shadow 0.2s,
-    border-color 0.2s;
+    border-color 0.2s,
+    transform 0.15s;
 }
 
 .tab:hover {
   box-shadow: var(--shadow);
+  transform: translateY(-1px);
 }
 
 .tab.active {
   border-color: var(--accent-border);
   background: var(--accent-bg);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .tab:disabled {
@@ -73,10 +83,15 @@
   box-shadow: none;
 }
 
+.tab:active {
+  transform: translateY(0px);
+}
+
 .appMain {
   padding: 20px;
   display: flex;
   flex: 1;
+  background: var(--social-bg);
 }
 
 .screen {
@@ -87,8 +102,14 @@
   text-align: left;
 }
 
+.screenHeader {
+  padding: 2px 2px 0;
+}
+
 .screenHeader h1 {
-  font-size: 28px;
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
   margin: 0;
 }
 
@@ -101,7 +122,17 @@
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.01);
+  background: var(--bg);
+  transition:
+    box-shadow 0.2s,
+    transform 0.15s,
+    border-color 0.2s;
+}
+
+.panel:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--border) 70%, var(--accent-border));
 }
 
 .panelTitle {
@@ -171,6 +202,13 @@
   color: var(--text-h);
 }
 
+.input:focus-visible,
+.select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-color: var(--accent-border);
+}
+
 .range {
   width: 100%;
 }
@@ -200,19 +238,31 @@
   padding: 10px 12px;
   border-radius: 10px;
   cursor: pointer;
+  font-weight: 600;
   transition:
     box-shadow 0.2s,
-    border-color 0.2s;
+    border-color 0.2s,
+    transform 0.15s;
   white-space: nowrap;
 }
 
 .button:hover {
   box-shadow: var(--shadow);
+  transform: translateY(-1px);
 }
 
 .button.primary {
   border-color: var(--accent-border);
   background: var(--accent-bg);
+}
+
+.button:active {
+  transform: translateY(0px);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .button.danger {
@@ -237,6 +287,11 @@
   color: var(--text-h);
   background: var(--social-bg);
   white-space: nowrap;
+}
+
+.pill.accent {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
 }
 
 .pill.soon {
@@ -302,6 +357,10 @@
   gap: 12px;
 }
 
+.cards .card:first-child {
+  grid-column: 1 / -1;
+}
+
 @media (max-width: 1024px) {
   .cards {
     grid-template-columns: 1fr;
@@ -312,7 +371,17 @@
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 14px;
-  background: rgba(255, 255, 255, 0.01);
+  background: var(--bg);
+  transition:
+    box-shadow 0.2s,
+    transform 0.15s,
+    border-color 0.2s;
+}
+
+.card:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--border) 70%, var(--accent-border));
 }
 
 .cardTop {
@@ -326,6 +395,8 @@
   font-family: var(--heading);
   font-weight: 650;
   color: var(--text-h);
+  font-size: 18px;
+  letter-spacing: -0.2px;
 }
 
 .cardStats {
@@ -345,6 +416,7 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 10px;
+  background: var(--social-bg);
 }
 
 .statLabel {
@@ -362,6 +434,7 @@
   padding: 10px;
   border-radius: 12px;
   border: 1px dashed var(--border);
+  background: color-mix(in srgb, var(--bg) 70%, var(--social-bg));
 }
 
 .missingLabel {
@@ -406,6 +479,10 @@
   overflow: hidden;
 }
 
+.snapCard:hover {
+  box-shadow: var(--shadow);
+}
+
 .snapThumb {
   width: 100%;
   display: block;
@@ -432,8 +509,9 @@
 
 .cookInstruction {
   font-family: var(--heading);
-  font-size: 22px;
-  line-height: 1.25;
+  font-size: 26px;
+  line-height: 1.18;
+  letter-spacing: -0.4px;
   color: var(--text-h);
 }
 
@@ -479,6 +557,7 @@
   padding: 12px;
   display: flex;
   gap: 12px;
+  background: var(--social-bg);
 }
 
 .visualBadge {

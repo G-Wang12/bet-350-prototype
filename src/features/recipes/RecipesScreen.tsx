@@ -31,7 +31,7 @@ export function RecipesScreen(props: {
             <div className="screenHeader">
                 <h1>Recipes</h1>
                 <p className="muted">
-                    Strict filter: ≤{props.preferences.maxMissingItems} missing required items, and within {props.preferences.timeAvailableMinutes} minutes.
+                    Showing recipes you can cook in {props.preferences.timeAvailableMinutes} minutes with up to {props.preferences.maxMissingItems} missing items.
                 </p>
             </div>
 
@@ -132,7 +132,7 @@ export function RecipesScreen(props: {
                                         <div className="cardTitle">{m.recipe.title}</div>
                                         <div className="muted">{m.recipe.description}</div>
                                     </div>
-                                    <div className="pill">Score: {Math.round(m.score * 100)}</div>
+                                    <div className="pill accent">Match: {Math.round(m.score * 100)}</div>
                                 </div>
 
                                 <div className="cardStats">
@@ -163,7 +163,7 @@ export function RecipesScreen(props: {
 
                                 <div className="cardActions">
                                     <button className="button primary" onClick={() => props.onStartCooking(m.recipe.id)}>
-                                        Start step-by-step
+                                        Start cooking
                                     </button>
                                 </div>
                             </div>

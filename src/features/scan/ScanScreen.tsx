@@ -6,7 +6,7 @@ import { estimateCategory } from '../../utils/state'
 const PRESETS: Array<{ id: string; label: string; items: string[] }> = [
     {
         id: 'balanced',
-        label: 'Mock detect: balanced fridge',
+        label: 'Quick add: Balanced fridge',
         items: [
             'milk',
             'eggs',
@@ -23,12 +23,12 @@ const PRESETS: Array<{ id: string; label: string; items: string[] }> = [
     },
     {
         id: 'student',
-        label: 'Mock detect: student fridge',
+        label: 'Quick add: Student fridge',
         items: ['pasta', 'butter', 'garlic', 'parmesan', 'bread', 'eggs'],
     },
     {
         id: 'veggie',
-        label: 'Mock detect: veggie fridge',
+        label: 'Quick add: Veggie fridge',
         items: ['tofu', 'broccoli', 'bell pepper', 'soy sauce', 'cooked rice', 'lemon'],
     },
 ]
@@ -90,9 +90,7 @@ export function ScanScreen(props: {
         <div className="screen">
             <div className="screenHeader">
                 <h1>Scan your fridge</h1>
-                <p className="muted">
-                    Prototype note: ingredient detection is mocked. You can take/upload a photo, then confirm/edit detected items.
-                </p>
+                <p className="muted">Add a photo, review the ingredients we find, and save to update your fridge.</p>
             </div>
 
             <div className="grid2">
@@ -116,7 +114,7 @@ export function ScanScreen(props: {
                     )}
 
                     <div className="panelTitle" style={{ marginTop: 16 }}>
-                        2) Mock detection
+                        2) Suggested ingredients
                     </div>
                     <div className="rowWrap">
                         {PRESETS.map((p) => (
@@ -192,7 +190,7 @@ export function ScanScreen(props: {
                 </section>
 
                 <section className="panel">
-                    <div className="panelTitle">Confirm detected ingredients</div>
+                    <div className="panelTitle">Review ingredients</div>
 
                     <div className="inline" style={{ gap: 8 }}>
                         <input
@@ -210,7 +208,7 @@ export function ScanScreen(props: {
                     </div>
 
                     {rows.length === 0 ? (
-                        <div className="emptyState">No items yet. Use a mock detect preset or add items manually.</div>
+                        <div className="emptyState">No items yet. Use a quick-add preset or add items manually.</div>
                     ) : (
                         <div className="list">
                             {rows.map((r, idx) => (
@@ -278,7 +276,7 @@ export function ScanScreen(props: {
                                 })
                             }}
                         >
-                            Save scan → show recipes
+                            Save & find recipes
                         </button>
                     </div>
                 </section>

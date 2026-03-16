@@ -19,7 +19,6 @@ export function CookMode(props: {
     const steps = props.recipe.steps
     const step = steps[stepIndex]
 
-    // Timer (simple; prototype-level)
     function startTimer(seconds: number) {
         setTimerRunning(true)
         setTimerRemaining(seconds)
@@ -153,7 +152,7 @@ export function CookMode(props: {
                         <div className="visualBody">
                             <div className="visualTitle">{step.visual.label}</div>
                             <div className="muted">
-                                Prototype visual guidance (illustration placeholder). Add real images/video later.
+                                Visual guidance will appear here.
                             </div>
                         </div>
                     </div>

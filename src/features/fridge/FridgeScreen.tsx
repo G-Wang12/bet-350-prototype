@@ -161,7 +161,7 @@ export function FridgeScreen(props: {
                     <div className="panelFooter">
                         <div className="muted">Tip: set expiry dates to see reminders.</div>
                         <button className="button danger" onClick={props.onClearAll}>
-                            Clear all local prototype data
+                            Reset all saved data
                         </button>
                     </div>
                 </section>
