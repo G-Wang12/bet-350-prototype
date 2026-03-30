@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { getVisualPath } from '../../utils/visualMap'
 import type { FridgeInventory, Preferences, Recipe } from '../../types'
 import { suggestFromLeftovers, buildInventorySet } from '../../utils/recipeMatch'
 
@@ -18,6 +19,7 @@ export function CookMode(props: {
 
     const steps = props.recipe.steps
     const step = steps[stepIndex]
+    const visualSrc = step && getVisualPath(step.instruction)
 
     function startTimer(seconds: number) {
         setTimerRunning(true)
@@ -146,15 +148,15 @@ export function CookMode(props: {
             <section className="panel">
                 <div className="cookInstruction">{step.instruction}</div>
 
-                {step.visual && (
+                {step.visual && visualSrc && (
                     <div className="visual">
-                        <div className="visualBadge">Visual</div>
-                        <div className="visualBody">
-                            <div className="visualTitle">{step.visual.label}</div>
-                            <div className="muted">
-                                Visual guidance will appear here.
-                            </div>
-                        </div>
+                        <img src={visualSrc} alt={step.visual.label} className="visualImage" />
+                    </div>
+                )}
+
+                {step.visual && !visualSrc && (
+                    <div className="visual emptyVisual">
+                        <div className="muted">Visual guidance will appear here.</div>
                     </div>
                 )}
 

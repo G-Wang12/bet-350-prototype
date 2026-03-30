@@ -6,7 +6,7 @@ export type DietaryPreference =
   | "dairyFree"
   | "nutFree";
 
-export type Difficulty = "easy" | "medium";
+export type Difficulty = "easy" | "med";
 
 export type FoodCategory =
   | "produce"

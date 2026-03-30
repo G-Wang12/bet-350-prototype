@@ -305,7 +305,7 @@ export function getMockRecipes(): Recipe[] {
       title: "Tofu Veggie Stir-Fry",
       description: "Quick weeknight stir-fry; swap in any vegetables.",
       timeMinutes: 20,
-      difficulty: "medium",
+      difficulty: "med",
       dietaryTags: ["vegan", "vegetarian"],
       ingredients: [
         ing("tofu"),

@@ -12,6 +12,30 @@ export function RecipesScreen(props: {
 }) {
     const [query, setQuery] = useState('')
 
+    function getCharacteristics(recipe: Recipe) {
+        const names = `${recipe.title} ${recipe.description} ${recipe.ingredients
+            .map((i) => i.name)
+            .join(' ')}`.toLowerCase()
+
+        const dairyKeywords = ['milk', 'butter', 'cheese', 'yogurt', 'cream', 'mozzarella', 'parmesan', 'feta']
+        const highCalorieKeywords = ['butter', 'mayonnaise', 'avocado', 'peanut butter', 'granola', 'honey', 'olive oil']
+        const proteinKeywords = ['chicken', 'tofu', 'tuna', 'egg', 'chickpea', 'black beans', 'greek yogurt', 'lentil', 'beans']
+
+        const isVegetarian = (recipe.dietaryTags || []).includes('vegetarian') || (recipe.dietaryTags || []).includes('vegan')
+        const isLactoseFree = (recipe.dietaryTags || []).includes('dairyFree') || !dairyKeywords.some((k) => names.includes(k))
+        const hasPeanuts = names.includes('peanut') || names.includes('peanut butter')
+        const isProteinRich = proteinKeywords.some((k) => names.includes(k))
+        const isLowCalories = !highCalorieKeywords.some((k) => names.includes(k))
+
+        const out: { key: string; label: string }[] = []
+        if (isVegetarian) out.push({ key: 'vegetarian', label: 'Vegetarian' })
+        if (isLactoseFree) out.push({ key: 'lactoseFree', label: 'Lactose‑free' })
+        if (isLowCalories) out.push({ key: 'lowCalories', label: 'Low calories' })
+        if (hasPeanuts) out.push({ key: 'peanuts', label: 'Contains peanuts' })
+        if (isProteinRich) out.push({ key: 'protein', label: 'Protein‑rich' })
+
+        return out
+    }
     const matches = useMemo(() => {
         const base = rankRecipes(props.recipes, props.inventory, props.preferences)
         const q = normalizeIngredientName(query)
@@ -133,6 +157,20 @@ export function RecipesScreen(props: {
                                         <div className="muted">{m.recipe.description}</div>
                                     </div>
                                     <div className="pill accent">Match: {Math.round(m.score * 100)}</div>
+                                </div>
+
+                                <div className="cardCharacteristics">
+                                    <div className="stat">
+                                        <div className="statValue">
+                                            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                                                {getCharacteristics(m.recipe).map((c) => (
+                                                    <div key={c.key} className="pill">
+                                                        {c.label}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div className="cardStats">
