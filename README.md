@@ -1,4 +1,4 @@
-# Fridge-to-Meal (Frontend-only Prototype)
+# FridgeMind (Frontend-only Prototype)
 
 React + TypeScript prototype for a UX class: take a fridge photo, confirm ingredients, and get ranked 20-minute recipe suggestions.
 

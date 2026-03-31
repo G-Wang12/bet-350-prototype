@@ -35,7 +35,7 @@ function App() {
       <header className="appHeader">
         <div className="headerRow">
           <div className="brand">
-            <div className="brandTitle">Fridge-to-Meal</div>
+            <div className="brandTitle">FridgeMind</div>
             <div className="brandSub">Scan ingredients • get 20-minute meals</div>
           </div>
           <div className="headerMeta">
