@@ -408,7 +408,7 @@ function CameraControls({ onCapture }: { onCapture: (dataUrl: string) => void })
     }
 
     return (
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', width: '100%' }}>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center', width: '100%' }}>
             {!active ? (
                 <button className="button primary" onClick={startCamera} style={{ flex: '0 0 auto' }}>
                     Use camera
