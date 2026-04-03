@@ -59,12 +59,12 @@ export function FridgeScreen(props: {
         <div className="screen">
             <div className="screenHeader">
                 <h1>Your fridge</h1>
-                <p className="muted">Items persist locally from previous scans (saved in your browser).</p>
+                <p className="muted">Saved on this device.</p>
             </div>
 
             {props.reminders.length > 0 && (
                 <section className="panel">
-                    <div className="panelTitle">Reminders (going bad soon)</div>
+                    <div className="panelTitle">Reminders</div>
                     <div className="list">
                         {props.reminders.map((r) => (
                             <div key={r.itemId} className="reminderRow">
@@ -107,9 +107,15 @@ export function FridgeScreen(props: {
                     </div>
 
                     {items.length === 0 ? (
-                        <div className="emptyState">No items yet. Go to Scan to create your first inventory.</div>
+                        <div className="emptyState">No items yet. Scan ingredients to get started.</div>
                     ) : (
                         <div className="list">
+                            <div className="listHeader" role="row">
+                                <div className="listHeaderCell">Item</div>
+                                <div className="listHeaderCell">Category</div>
+                                <div className="listHeaderCell">Expiry</div>
+                                <div className="listHeaderCell" aria-hidden="true" />
+                            </div>
                             {items.map((i) => (
                                 <div key={i.id} className="listRow">
                                     <input
@@ -167,7 +173,7 @@ export function FridgeScreen(props: {
                 </section>
 
                 <section className="panel">
-                    <div className="panelTitle">Previous fridge scans</div>
+                    <div className="panelTitle">Recent scans</div>
                     {snapshotsToShow.length === 0 ? (
                         <div className="emptyState">No scans yet.</div>
                     ) : (

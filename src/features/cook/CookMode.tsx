@@ -67,12 +67,12 @@ export function CookMode(props: {
         return (
             <div className="screen">
                 <div className="screenHeader">
-                    <h1>Done cooking: {props.recipe.title}</h1>
-                    <p className="muted">Pick what you used, then get automatic follow-up suggestions from leftovers.</p>
+                    <h1>Done: {props.recipe.title}</h1>
+                    <p className="muted">Mark what you used to get leftover-based suggestions.</p>
                 </div>
 
                 <section className="panel">
-                    <div className="panelTitle">What ingredients did you use?</div>
+                    <div className="panelTitle">Used ingredients</div>
                     <div className="checkList">
                         {props.recipe.ingredients.map((ing) => (
                             <label key={ing.normalizedName} className="checkRow">
@@ -92,7 +92,7 @@ export function CookMode(props: {
                 </section>
 
                 <section className="panel">
-                    <div className="panelTitle">Follow-up recipes (from leftovers)</div>
+                    <div className="panelTitle">Cook next (from leftovers)</div>
                     {followUps.length === 0 ? (
                         <div className="emptyState">No follow-ups match leftovers under current filters.</div>
                     ) : (
@@ -203,7 +203,7 @@ export function CookMode(props: {
             </section>
 
             <section className="panel">
-                <div className="panelTitle">Ingredients (what you have)</div>
+                <div className="panelTitle">Ingredients</div>
                 <div className="chips">
                     {props.recipe.ingredients.map((ing) => {
                         const have = invSet.has(ing.normalizedName)
@@ -215,7 +215,7 @@ export function CookMode(props: {
                         )
                     })}
                 </div>
-                <div className="help">* Optional ingredients don’t count toward missing-items filtering.</div>
+                <div className="help">* Optional ingredients don’t count as missing.</div>
             </section>
         </div>
     )

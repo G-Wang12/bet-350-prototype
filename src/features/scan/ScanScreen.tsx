@@ -6,7 +6,7 @@ import { estimateCategory } from '../../utils/state'
 const PRESETS: Array<{ id: string; label: string; items: string[] }> = [
     {
         id: 'balanced',
-        label: 'Quick add: Balanced fridge',
+        label: 'Balanced',
         items: [
             'milk',
             'eggs',
@@ -23,12 +23,12 @@ const PRESETS: Array<{ id: string; label: string; items: string[] }> = [
     },
     {
         id: 'student',
-        label: 'Quick add: Student fridge',
+        label: 'Student staples',
         items: ['pasta', 'butter', 'garlic', 'parmesan', 'bread', 'eggs'],
     },
     {
         id: 'veggie',
-        label: 'Quick add: Veggie fridge',
+        label: 'Veggie',
         items: ['tofu', 'broccoli', 'bell pepper', 'soy sauce', 'cooked rice', 'lemon'],
     },
 ]
@@ -47,6 +47,8 @@ export function ScanScreen(props: {
     const [imageDataUrl, setImageDataUrl] = useState<string | undefined>(undefined)
     const [rows, setRows] = useState<DetectedRow[]>([])
     const [custom, setCustom] = useState('')
+    const [photoFileName, setPhotoFileName] = useState<string>('')
+    const fileInputRef = useRef<HTMLInputElement | null>(null)
 
     const inventoryPreview = useMemo(() => {
         return rows
@@ -90,29 +92,41 @@ export function ScanScreen(props: {
         <div className="screen">
             <div className="screenHeader">
                 <h1>Scan your fridge</h1>
-                <p className="muted">Add a photo, review the ingredients we find, and save to update your fridge.</p>
+                <p className="muted">Add ingredients from a photo or quick add, then save to see recipe matches.</p>
             </div>
 
             <div className="grid2">
                 <section className="panel">
-                    <div className="panelTitle">1) Add a fridge photo</div>
+                    <div className="panelTitle">Photo</div>
 
-                            <input
-                                className="input"
-                                type="file"
-                                accept="image/*"
-                                capture="environment"
-                                onChange={(e) => onPickFile(e.target.files?.[0] ?? null)}
-                            />
+                    <input
+                        ref={fileInputRef}
+                        className="srOnly"
+                        type="file"
+                        accept="image/*"
+                        capture="environment"
+                        onChange={(e) => {
+                            const file = e.target.files?.[0] ?? null
+                            setPhotoFileName(file?.name ?? '')
+                            onPickFile(file)
+                        }}
+                    />
 
-                            <div style={{ marginTop: 10, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                                <CameraControls
-                                    onCapture={async (dataUrl: string) => {
-                                        const thumb = await downscaleDataUrl(dataUrl, 800)
-                                        setImageDataUrl(thumb)
-                                    }}
-                                />
-                            </div>
+                    <div className="filePickerRow">
+                        <button className="button" type="button" onClick={() => fileInputRef.current?.click()}>
+                            {imageDataUrl ? 'Change photo' : 'Choose photo'}
+                        </button>
+                        <div className="filePickerName muted">{photoFileName ? photoFileName : 'No file selected'}</div>
+                    </div>
+
+                    <div style={{ marginTop: 10, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                        <CameraControls
+                            onCapture={async (dataUrl: string) => {
+                                const thumb = await downscaleDataUrl(dataUrl, 800)
+                                setImageDataUrl(thumb)
+                            }}
+                        />
+                    </div>
 
                     {imageDataUrl ? (
                         <div className="photoWrap">
@@ -123,7 +137,7 @@ export function ScanScreen(props: {
                     )}
 
                     <div className="panelTitle" style={{ marginTop: 16 }}>
-                        2) Suggested ingredients
+                        Quick add
                     </div>
                     <div className="rowWrap">
                         {PRESETS.map((p) => (
@@ -134,7 +148,7 @@ export function ScanScreen(props: {
                     </div>
 
                     <div className="panelTitle" style={{ marginTop: 16 }}>
-                        3) Preferences (ranking + filtering)
+                        Preferences
                     </div>
 
                     <div className="formRow">
@@ -194,12 +208,12 @@ export function ScanScreen(props: {
                             <option value={1}>1</option>
                             <option value={2}>2</option>
                         </select>
-                        <div className="help">Recipes will be filtered to at most this many missing required ingredients.</div>
+                        <div className="help">Counts required ingredients only.</div>
                     </div>
                 </section>
 
                 <section className="panel">
-                    <div className="panelTitle">Review ingredients</div>
+                    <div className="panelTitle">Ingredients</div>
 
                     <div className="inline" style={{ gap: 8 }}>
                         <input
@@ -217,7 +231,7 @@ export function ScanScreen(props: {
                     </div>
 
                     {rows.length === 0 ? (
-                        <div className="emptyState">No items yet. Use a quick-add preset or add items manually.</div>
+                        <div className="emptyState">No items yet. Use Quick add or type an item.</div>
                     ) : (
                         <div className="list">
                             {rows.map((r, idx) => (
@@ -248,7 +262,7 @@ export function ScanScreen(props: {
                                         className="input"
                                         type="number"
                                         min={0}
-                                        placeholder="Expires in (days)"
+                                        placeholder="Expires in days"
                                         value={r.expiresInDays ?? ''}
                                         onChange={(e) =>
                                             updateRow(idx, {
@@ -285,7 +299,7 @@ export function ScanScreen(props: {
                                 })
                             }}
                         >
-                            Save & find recipes
+                            Save & see recipes
                         </button>
                     </div>
                 </section>
@@ -385,7 +399,9 @@ function CameraControls({ onCapture }: { onCapture: (dataUrl: string) => void })
             try {
                 videoRef.current.pause()
                 videoRef.current.srcObject = null
-            } catch {}
+            } catch {
+                // Best-effort cleanup; ignore if video element is already disposed.
+            }
         }
         setActive(false)
     }

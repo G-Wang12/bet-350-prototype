@@ -12,6 +12,15 @@ export function RecipesScreen(props: {
 }) {
     const [query, setQuery] = useState('')
 
+    const dietaryLabel: Record<Preferences['dietary'], string> = {
+        none: 'Any diet',
+        vegetarian: 'Vegetarian',
+        vegan: 'Vegan',
+        glutenFree: 'Gluten‑free',
+        dairyFree: 'Dairy‑free',
+        nutFree: 'Nut‑free',
+    }
+
     function getCharacteristics(recipe: Recipe) {
         const names = `${recipe.title} ${recipe.description} ${recipe.ingredients
             .map((i) => i.name)
@@ -55,12 +64,12 @@ export function RecipesScreen(props: {
             <div className="screenHeader">
                 <h1>Recipes</h1>
                 <p className="muted">
-                    Showing recipes you can cook in {props.preferences.timeAvailableMinutes} minutes with up to {props.preferences.maxMissingItems} missing items.
+                    Up to {props.preferences.timeAvailableMinutes} min • Missing ≤ {props.preferences.maxMissingItems} • {dietaryLabel[props.preferences.dietary]}
                 </p>
             </div>
 
             <section className="panel">
-                <div className="panelTitle">Search + preferences</div>
+                <div className="panelTitle">Search + filters</div>
 
                 <div className="grid3">
                     <div className="formRow">
@@ -130,13 +139,13 @@ export function RecipesScreen(props: {
                             <option value={1}>1</option>
                             <option value={2}>2</option>
                         </select>
-                        <div className="help">Missing counts only required ingredients (optional don’t count).</div>
+                        <div className="help">Required only (optional ignored).</div>
                     </div>
 
                     <div className="formRow">
-                        <label className="label">Fridge items</label>
+                        <label className="label">In your fridge</label>
                         <div className="pill">{inventoryCount}</div>
-                        <div className="help">If you have 0 items, go to Scan first.</div>
+                        {inventoryCount === 0 && <div className="help">Scan ingredients first.</div>}
                     </div>
                 </div>
             </section>
@@ -145,7 +154,7 @@ export function RecipesScreen(props: {
                 <div className="panelTitle">Best matches</div>
                 {matches.length === 0 ? (
                     <div className="emptyState">
-                        No recipes match right now. Try increasing allowed missing items (up to 2), increasing time, or scanning more ingredients.
+                        No matches yet. Try: missing = 2 • more time • scan more items.
                     </div>
                 ) : (
                     <div className="cards">

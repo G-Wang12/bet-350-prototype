@@ -26,13 +26,16 @@
   font-family: var(--heading);
   font-weight: 700;
   color: var(--text-h);
-  font-size: 20px;
+  font-size: 18px;
   letter-spacing: -0.3px;
 }
 
 .brandSub {
   color: var(--text);
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.25;
+  hyphens: none;
+  text-wrap: balance;
 }
 
 .headerMeta {
@@ -44,14 +47,18 @@
 .tabs {
   margin-top: 12px;
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--bg) 70%, var(--social-bg));
 }
 
 .tab {
   appearance: none;
-  border: 1px solid var(--border);
-  background: var(--social-bg);
+  border: 1px solid transparent;
+  background: transparent;
   color: var(--text-h);
   padding: 8px 12px;
   border-radius: 10px;
@@ -62,9 +69,13 @@
     transform 0.15s;
 }
 
-.tab:hover {
-  box-shadow: var(--shadow);
-  transform: translateY(-1px);
+@media (hover: hover) {
+  .tab:hover {
+    border-color: color-mix(in srgb, var(--border) 50%, var(--accent-border));
+    background: color-mix(in srgb, var(--bg) 60%, var(--social-bg));
+    box-shadow: none;
+    transform: none;
+  }
 }
 
 .tab.active {
@@ -84,7 +95,7 @@
 }
 
 .tab:active {
-  transform: translateY(0px);
+  transform: none;
 }
 
 .appMain {
@@ -98,7 +109,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   text-align: left;
 }
 
@@ -107,15 +118,17 @@
 }
 
 .screenHeader h1 {
-  font-size: 30px;
+  font-size: 26px;
   line-height: 1.1;
   letter-spacing: -0.5px;
   margin: 0;
+  text-wrap: balance;
 }
 
 .muted {
   color: var(--text);
   font-size: 14px;
+  line-height: 1.35;
 }
 
 .panel {
@@ -131,7 +144,7 @@
 
 .panel:hover {
   box-shadow: var(--shadow);
-  transform: translateY(-1px);
+  transform: none;
   border-color: color-mix(in srgb, var(--border) 70%, var(--accent-border));
 }
 
@@ -139,6 +152,7 @@
   font-family: var(--heading);
   color: var(--text-h);
   font-weight: 600;
+  letter-spacing: -0.15px;
   margin-bottom: 12px;
 }
 
@@ -210,6 +224,17 @@
   border-color: var(--accent-border);
 }
 
+@media (hover: hover) {
+  .input:hover,
+  .select:hover {
+    border-color: color-mix(in srgb, var(--border) 55%, var(--accent-border));
+  }
+
+  .button:hover {
+    border-color: color-mix(in srgb, var(--border) 60%, var(--accent-border));
+  }
+}
+
 .range {
   width: 100%;
 }
@@ -249,7 +274,7 @@
 
 .button:hover {
   box-shadow: var(--shadow);
-  transform: translateY(-1px);
+  transform: none;
 }
 
 .button.primary {
@@ -258,7 +283,7 @@
 }
 
 .button:active {
-  transform: translateY(0px);
+  transform: none;
 }
 
 .button:focus-visible {
@@ -308,6 +333,35 @@
   border: 1px dashed var(--border);
   border-radius: 12px;
   color: var(--text);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.filePickerRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filePickerName {
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .list {
@@ -315,6 +369,21 @@
   flex-direction: column;
   gap: 10px;
   margin-top: 12px;
+}
+
+.listHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 0 2px;
+  color: var(--text);
+  font-size: 12px;
+}
+
+.listHeaderCell {
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
 }
 
 .listRow {
@@ -325,6 +394,9 @@
 }
 
 @media (max-width: 1024px) {
+  .listHeader {
+    display: none;
+  }
   .listRow {
     grid-template-columns: 1fr;
   }
@@ -417,7 +489,7 @@ video {
 
 .card:hover {
   box-shadow: var(--shadow);
-  transform: translateY(-1px);
+  transform: none;
   border-color: color-mix(in srgb, var(--border) 70%, var(--accent-border));
 }
 

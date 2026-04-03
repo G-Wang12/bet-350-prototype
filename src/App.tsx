@@ -36,7 +36,7 @@ function App() {
         <div className="headerRow">
           <div className="brand">
             <div className="brandTitle">FridgeMind</div>
-            <div className="brandSub">Scan ingredients • get 20-minute meals</div>
+            <div className="brandSub">Scan ingredients • 20 min meals</div>
           </div>
           <div className="headerMeta">
             <div className="pill">Items: {state.inventory.items.length}</div>

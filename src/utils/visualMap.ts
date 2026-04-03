@@ -1,14 +1,17 @@
 // Use Vite's import.meta.glob to eagerly resolve asset URLs. This guarantees
 // URLs are correct under the dev server and in production builds.
-const modules = import.meta.glob('../assets/visual_assistance_photos/**/*', { as: 'url', eager: true }) as Record<string, string>
+const modules = import.meta.glob("../assets/visual_assistance_photos/**/*", {
+  as: "url",
+  eager: true,
+}) as Record<string, string>;
 
 // Build a map from filename (basename) to resolved URL
-const FILE_URL_BY_BASENAME: Record<string, string> = {}
+const FILE_URL_BY_BASENAME: Record<string, string> = {};
 for (const [path, url] of Object.entries(modules)) {
   // path looks like '/src/assets/visual_assistance_photos/...'
-  const parts = path.split('/')
-  const filename = parts[parts.length - 1]
-  FILE_URL_BY_BASENAME[filename] = url
+  const parts = path.split("/");
+  const filename = parts[parts.length - 1];
+  FILE_URL_BY_BASENAME[filename] = url;
 }
 
 // Map of instruction -> basename (exact filenames found in assets)
@@ -49,41 +52,45 @@ const MAP_RAW: Record<string, string> = {
   "Toast the bread.": `Toast the bread..jpg`,
   "Top with cucumber/nori/sriracha if available.": `Top with cucumber/nori/sriracha if available..webp`,
   "Toss pasta with garlic butter. Add parmesan/lemon if available.": `lemon if available..jpg`,
-}
+};
 
 export function getVisualPath(key?: string): string | undefined {
-  if (!key) return undefined
+  if (!key) return undefined;
   function normalize(s: string) {
     return s
       .trim()
-      .replace(/\s+/g, ' ')
-      .replace(/[\u2013\u2014]/g, '-') // normalize en/em dashes
-      .replace(/[\u2018\u2019\u201C\u201D]/g, "'")
+      .replace(/\s+/g, " ")
+      .replace(/[\u2013\u2014]/g, "-") // normalize en/em dashes
+      .replace(/[\u2018\u2019\u201C\u201D]/g, "'");
   }
 
-  let k = normalize(key)
-  if (k.endsWith('.')) k = k.slice(0, -1)
+  let k = normalize(key);
+  if (k.endsWith(".")) k = k.slice(0, -1);
   // build normalized lookup map once
-  const MAP_NORM: Record<string, string> = {}
+  const MAP_NORM: Record<string, string> = {};
   for (const [orig, relPath] of Object.entries(MAP_RAW)) {
-    MAP_NORM[normalize(orig).replace(/\.+$/,'')] = relPath
+    MAP_NORM[normalize(orig).replace(/\.+$/, "")] = relPath;
   }
-  const rel = MAP_NORM[k] ?? MAP_RAW[k]
-  if (!rel) return undefined
+  const rel = MAP_NORM[k] ?? MAP_RAW[k];
+  if (!rel) return undefined;
 
   // Prefer the URL resolved by import.meta.glob (handles nested folders)
-  const byBasename = FILE_URL_BY_BASENAME[rel]
-  if (byBasename) return byBasename
+  const byBasename = FILE_URL_BY_BASENAME[rel];
+  if (byBasename) return byBasename;
 
   // fallback: try to find by normalized basename (strip punctuation)
-  const maybe = Object.entries(FILE_URL_BY_BASENAME).find(([name]) => name.replace(/[^a-z0-9.-]/gi, '').toLowerCase() === rel.replace(/[^a-z0-9.-]/gi, '').toLowerCase())
-  if (maybe) return maybe[1]
+  const maybe = Object.entries(FILE_URL_BY_BASENAME).find(
+    ([name]) =>
+      name.replace(/[^a-z0-9.-]/gi, "").toLowerCase() ===
+      rel.replace(/[^a-z0-9.-]/gi, "").toLowerCase(),
+  );
+  if (maybe) return maybe[1];
 
   try {
-    return new URL(`../assets/${rel}`, import.meta.url).href
-  } catch (e) {
-    return undefined
+    return new URL(`../assets/${rel}`, import.meta.url).href;
+  } catch {
+    return undefined;
   }
 }
 
-export default getVisualPath
+export default getVisualPath;
